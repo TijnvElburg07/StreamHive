@@ -12,4 +12,4 @@
 
 {# -- Method to get user information from the database #}
 
-{# Method to update user information in the database #}
+{# -- Method to update user information in the database #}
