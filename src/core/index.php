@@ -5,3 +5,7 @@
 {# -- homepage HTML content #}
 
 {# -- connect JS and CSS to HTML #}
+
+<?php
+// include db connection
+include_once 'db.php';
