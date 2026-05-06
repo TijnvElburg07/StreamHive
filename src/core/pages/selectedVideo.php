@@ -2,6 +2,8 @@
 include_once '../db.php';
 require_once '../../methods/User.php';
 $user = new User($pdo);
+require_once '../../methods/Video.php';
+$videoClass = new Video($pdo);
 
 // Haal het video ID op uit de URL
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
@@ -23,8 +25,7 @@ if (!$video) {
 }
 
 // Verhoog het view-aantal
-$stmt = $pdo->prepare("UPDATE videos SET views = views + 1 WHERE id = ?");
-$stmt->execute([$id]);
+$videoClass->addView($id);
 ?>
 
 <!DOCTYPE html>

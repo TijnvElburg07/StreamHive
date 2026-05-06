@@ -1,10 +1,13 @@
 
 
 <?php
+session_start();
 // include db connection
 $pdo = require_once 'db.php';
 require_once '../methods/Video.php';
 require_once '../methods/User.php';
+$videoClass = new Video($pdo);
+$user = new User($pdo);
 
 // print all videos
 $video = new Video($pdo);
@@ -13,8 +16,12 @@ foreach ($videos as $v) {
     // print video title, description and views and a line break
     echo $v['title'] . " - " . $v['description'] . " - Views: " . $v['views'] . "<br>";
     // clickable thumbnail that links to video page
-    echo '<a href="pages/video.php?id=' . $v['id'] . '">';
+    echo '<a href="pages/selectedVideo.php?id=' . $v['id'] . '">';
     echo '<img src="../data/uploads/thumbnails/' . $v['thumbnail'] . '" alt="Thumbnail"><br>';
+    if ($videoClass->getVideoCreator($v['id']) == $user->getUsername($user->getUserId())) {
+        // add delete button that links to delete video page
+        echo '<a href="pages/deleteVideo.php?id=' . $v['id'] . '"><button>Delete</button></a>';
+    }
     // echo '<video width="320" height="240" controls><source src="../data/uploads/videos/' . $v['filename'] . '" type="video/mp4"></video><br>';
 }
 
