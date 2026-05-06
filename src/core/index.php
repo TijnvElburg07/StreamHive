@@ -12,8 +12,10 @@ $videos = $video->getAllVideos();
 foreach ($videos as $v) {
     // print video title, description and views and a line break
     echo $v['title'] . " - " . $v['description'] . " - Views: " . $v['views'] . "<br>";
-    echo '<img src="../uploads/' . $v['thumbnail'] . '" alt="Thumbnail"><br>';
-    echo '<video width="320" height="240" controls><source src="../uploads/' . $v['filename'] . '" type="video/mp4"></video><br>';
+    // clickable thumbnail that links to video page
+    echo '<a href="pages/video.php?id=' . $v['id'] . '">';
+    echo '<img src="../data/uploads/thumbnails/' . $v['thumbnail'] . '" alt="Thumbnail"><br>';
+    // echo '<video width="320" height="240" controls><source src="../data/uploads/videos/' . $v['filename'] . '" type="video/mp4"></video><br>';
 }
 
 // {# -- checks login status and redirects to login page if not logged in #}
