@@ -1,2 +1,4 @@
-{# -- Login page HTML content
--- connect JS and CSS to HTML #}
+<?php
+include_once '../db.php';
+
+// $user = new User($pdo);
