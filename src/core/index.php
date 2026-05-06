@@ -18,6 +18,8 @@ $user = new User($pdo);
 if (!$user->isLoggedIn()) {
     // create button for login page
     echo '<a href="pages/login.php"><button>Login</button></a>';
+} else {
+    echo '<a href="pages/logout.php"><button>Logout</button></a>';
 }
 
 // {# -- Start session #}

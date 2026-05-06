@@ -1,6 +1,6 @@
 <?php
 
-include_once '../core/db.php';
+include_once __DIR__ .  '/../core/db.php';
 
 
 // {# -- Create User class to handle user-related operations #}
@@ -51,6 +51,8 @@ class User{
     public function logout(){
         session_start();
         session_destroy();
+        header('Location: ../index.php');
+        exit();
     }
 
     // {# -- Method to check if a user is logged in #}
