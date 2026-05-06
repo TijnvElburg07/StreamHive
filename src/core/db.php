@@ -1,5 +1,5 @@
 <?php
-include_once '../data/config.php';
+include_once __DIR__ . '/../data/config.php';
 // Create PDO connection
 
 try {
