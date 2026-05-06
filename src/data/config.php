@@ -1,4 +1,3 @@
-{# -- database config #}
 <?php
 
 $config['db'] = [

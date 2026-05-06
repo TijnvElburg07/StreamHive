@@ -1,6 +1,5 @@
-{# Include database config #}
 <?php
-include_once 'config.php';
+include_once '../data/config.php';
 // Create PDO connection
 
 try {
