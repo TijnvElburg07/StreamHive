@@ -9,11 +9,9 @@ require_once '../methods/User.php';
 $videoClass = new Video($pdo);
 $user = new User($pdo);
 
-// print all videos
 $video = new Video($pdo);
 $videos = $video->getAllVideos();
 foreach ($videos as $v) {
-    // print video title, description and views and a line break
     echo $v['title'] . " - " . $v['description'] . " - Views: " . $v['views'] . "<br>";
     // clickable thumbnail that links to video page
     echo '<a href="pages/selectedVideo.php?id=' . $v['id'] . '">';
