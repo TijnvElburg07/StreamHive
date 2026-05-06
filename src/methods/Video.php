@@ -16,19 +16,41 @@ class Video{
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // {# Video class to handle video-related operations #}
+    public function getVideoCreator($videoId){
+        $stmt = $this->pdo->prepare("SELECT users.username FROM videos JOIN users ON videos.user_id = users.id WHERE videos.id = ?");
+        $stmt->execute([$videoId]);
+        return $stmt->fetchColumn();
+    }
 
-    // {# Method to upload a video #}
+    public function addView($videoId){
+        $stmt = $this->pdo->prepare("UPDATE videos SET views = views + 1 WHERE id = ?");
+        $stmt->execute([$videoId]);
+    }
 
-    // {# Method to delete a video #}
+    public function deleteVideo($videoId){
+        $stmt = $this->pdo->prepare("DELETE FROM videos WHERE id = ?");
+        $stmt->execute([$videoId]);
+        $stmt = $this->pdo->prepare("DELETE FROM comments WHERE video_id = ?");
+        $stmt->execute([$videoId]);
+        $stmt = $this->pdo->prepare("DELETE FROM likes WHERE video_id = ?");
+        $stmt->execute([$videoId]);
+        $stmt = $this->pdo->prepare("DELETE FROM video_category WHERE video_id = ?");
+        $stmt->execute([$videoId]);
 
-    // {# Method to get all videos #}
+        // Verwijder het videobestand en de thumbnail van de server
+        $stmt = $this->pdo->prepare("SELECT filename, thumbnail FROM videos WHERE id = ?");
+        $stmt->execute([$videoId]);
+        $video = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($video) {
+            $videoPath = __DIR__ . '/../data/uploads/videos/' . $video['filename'];
+            $thumbPath = __DIR__ . '/../data/uploads/thumbnails/' . $video['thumbnail'];
 
-    // {# Method to get a video by ID #}
-
-    // {# Method to get all videos uploaded by a specific user #}
-
-    // {# Method to search for videos by title or description #}
-
-    // {# Method to increment the view count of a video #}
+            if (file_exists($videoPath)) {
+                unlink($videoPath);
+            }
+            if (file_exists($thumbPath)) {
+                unlink($thumbPath);
+            }
+        }
+    }
 }

@@ -39,7 +39,6 @@ class User{
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($user && password_verify($password, $user['password'])) {
-            session_start();
             $_SESSION['user_id'] = $user['id'];
             return true;
         }
@@ -49,7 +48,6 @@ class User{
 
     // {# -- Method to log out a user #}
     public function logout(){
-        session_start();
         session_destroy();
         header('Location: ../index.php');
         exit();
@@ -57,7 +55,6 @@ class User{
 
     // {# -- Method to check if a user is logged in #}
     public function isLoggedIn(){
-        session_start();
         return isset($_SESSION['user_id']);
     }
 
@@ -72,5 +69,15 @@ class User{
     public function updateUserInfo($userId, $username, $email){
         $stmt = $this->pdo->prepare("UPDATE users SET username = :username, email = :email WHERE id = :id");
         return $stmt->execute(['username' => $username, 'email' => $email, 'id' => $userId]);
+    }
+
+    public function getUserId(){
+        return $_SESSION['user_id'] ?? null;
+    }
+
+    public function getUsername($userId){
+        $stmt = $this->pdo->prepare("SELECT username FROM users WHERE id = :id");
+        $stmt->execute(['id' => $userId]);
+        return $stmt->fetchColumn();
     }
 }
