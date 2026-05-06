@@ -11,7 +11,7 @@ class Video{
     }
 
     public function getAllVideos(){
-        $stmt = $this->pdo->prepare("SELECT * FROM videos ORDER BY created_at DESC");
+        $stmt = $this->pdo->prepare("SELECT * FROM videos ORDER BY views DESC");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }

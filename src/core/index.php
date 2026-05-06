@@ -10,7 +10,10 @@ require_once '../methods/User.php';
 $video = new Video($pdo);
 $videos = $video->getAllVideos();
 foreach ($videos as $v) {
-    echo $v['title'] . " - " . $v['description'] . "<br>";
+    // print video title, description and views and a line break
+    echo $v['title'] . " - " . $v['description'] . " - Views: " . $v['views'] . "<br>";
+    echo '<img src="../uploads/' . $v['thumbnail'] . '" alt="Thumbnail"><br>';
+    echo '<video width="320" height="240" controls><source src="../uploads/' . $v['filename'] . '" type="video/mp4"></video><br>';
 }
 
 // {# -- checks login status and redirects to login page if not logged in #}
@@ -20,6 +23,7 @@ if (!$user->isLoggedIn()) {
     echo '<a href="pages/login.php"><button>Login</button></a>';
 } else {
     echo '<a href="pages/logout.php"><button>Logout</button></a>';
+    echo '<a href="pages/upload.php"><button>Upload Video</button></a>';
 }
 
 // {# -- Start session #}
