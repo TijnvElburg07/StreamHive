@@ -1,3 +1,15 @@
-// JS for index.php
+function filterVideos() {
+  const query = document.getElementById("searchInput").value.toLowerCase();
+  const cards = document.querySelectorAll(".video-card");
+  let visible = 0;
 
-// JS handles the buttons on the homepage and redirects to the correct pages
+  cards.forEach((card) => {
+    const title = card.dataset.title;
+    const match = title.includes(query);
+    card.style.display = match ? "" : "none";
+    if (match) visible++;
+  });
+
+  document.getElementById("noResults").style.display =
+    visible === 0 ? "" : "none";
+}
