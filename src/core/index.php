@@ -45,7 +45,7 @@ $videoCat = $videoClass->getVideoCategories($videos[0]['id']);
                         <p><?= htmlspecialchars($v['title']) ?></p>
                         <p><?= htmlspecialchars($v['description']) ?></p>
                         <p>Views: <?= $v['views'] ?></p>
-                        <p>Category: <?= implode(', ', $videoCat) ?></p>
+                        <p id="cats">Category: <?= implode(', ', $videoCat) ?></p>
                     </a>
                     <?php if ($currentUsername && $videoClass->getVideoCreator($v['id']) === $currentUsername): ?>
                         <a href="pages/deleteVideo.php?id=<?= $v['id'] ?>"><button>Delete</button></a>
