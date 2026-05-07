@@ -34,8 +34,6 @@ class Video{
 
             $_SESSION['viewed_videos'][] = $videoId;
         }
-        var_dump($_SESSION['viewed_videos']);
-
     }
 
     public function deleteVideo($videoId){
