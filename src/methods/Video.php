@@ -62,4 +62,13 @@ class Video{
             }
         }
     }
+
+    public function getVideoCategories($videoId){
+        $stmt = $this->pdo->prepare("SELECT category_id FROM video_category WHERE video_id = ?");
+        $stmt->execute([$videoId]);
+        $result = $stmt->fetchAll(PDO::FETCH_COLUMN);
+        $stmt = $this->pdo->prepare("SELECT name FROM categories WHERE id = ?");
+        $stmt->execute([$result[0]]);
+        return $stmt->fetchAll(PDO::FETCH_COLUMN);
+    }
 }

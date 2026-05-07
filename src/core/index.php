@@ -9,6 +9,8 @@ $user = new User($pdo);
 $videos = $videoClass->getAllVideos();
 $isLoggedIn = $user->isLoggedIn();
 $currentUsername = $isLoggedIn ? $user->getUsername($user->getUserId()) : null;
+
+$videoCat = $videoClass->getVideoCategories($videos[0]['id']);
 ?>
 <!DOCTYPE html>
 <html lang="nl">
@@ -43,6 +45,7 @@ $currentUsername = $isLoggedIn ? $user->getUsername($user->getUserId()) : null;
                         <p><?= htmlspecialchars($v['title']) ?></p>
                         <p><?= htmlspecialchars($v['description']) ?></p>
                         <p>Views: <?= $v['views'] ?></p>
+                        <p>Category: <?= implode(', ', $videoCat) ?></p>
                     </a>
                     <?php if ($currentUsername && $videoClass->getVideoCreator($v['id']) === $currentUsername): ?>
                         <a href="pages/deleteVideo.php?id=<?= $v['id'] ?>"><button>Delete</button></a>
