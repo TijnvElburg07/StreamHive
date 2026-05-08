@@ -1,40 +1,63 @@
-
-
 <?php
 session_start();
-// include db connection
 $pdo = require_once 'db.php';
 require_once '../methods/Video.php';
 require_once '../methods/User.php';
+
 $videoClass = new Video($pdo);
 $user = new User($pdo);
+$videos = $videoClass->getAllVideos();
+$isLoggedIn = $user->isLoggedIn();
+$currentUsername = $isLoggedIn ? $user->getUsername($user->getUserId()) : null;
 
-$video = new Video($pdo);
-$videos = $video->getAllVideos();
-foreach ($videos as $v) {
-    echo $v['title'] . " - " . $v['description'] . " - Views: " . $v['views'] . "<br>";
-    // clickable thumbnail that links to video page
-    echo '<a href="pages/selectedVideo.php?id=' . $v['id'] . '">';
-    echo '<img src="../data/uploads/thumbnails/' . $v['thumbnail'] . '" alt="Thumbnail"><br>';
-    if ($videoClass->getVideoCreator($v['id']) == $user->getUsername($user->getUserId())) {
-        // add delete button that links to delete video page
-        echo '<a href="pages/deleteVideo.php?id=' . $v['id'] . '"><button>Delete</button></a>';
-    }
-    // echo '<video width="320" height="240" controls><source src="../data/uploads/videos/' . $v['filename'] . '" type="video/mp4"></video><br>';
-}
+$videoCat = $videoClass->getVideoCategories($videos[0]['id']);
+?>
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <title>VideoSite</title>
+</head>
+<body>
 
-// {# -- checks login status and redirects to login page if not logged in #}
-$user = new User($pdo);
-if (!$user->isLoggedIn()) {
-    // create button for login page
-    echo '<a href="pages/login.php"><button>Login</button></a>';
-} else {
-    echo '<a href="pages/logout.php"><button>Logout</button></a>';
-    echo '<a href="pages/upload.php"><button>Upload Video</button></a>';
-}
+    <nav>
+        <span>VideoSite</span>
+        <?php if ($isLoggedIn): ?>
+            <a href="pages/upload.php"><button>Upload Video</button></a>
+            <a href="pages/logout.php"><button>Logout</button></a>
+        <?php else: ?>
+            <a href="pages/login.php"><button>Login</button></a>
+        <?php endif; ?>
+    </nav>
 
-// {# -- Start session #}
+    <main>
+        <h1>Videos</h1>
 
-// {# -- homepage HTML content #}
+        <input type="text" id="searchInput" placeholder="Zoek videos..." onkeyup="filterVideos()">
 
-// {# -- connect JS and CSS to HTML #}
+        <div id="videoGrid">
+            <?php foreach ($videos as $v): ?>
+                <div class="video-card" data-title="<?= htmlspecialchars(strtolower($v['title'])) ?>">
+                    <a href="pages/selectedVideo.php?id=<?= $v['id'] ?>">
+                        <img src="../data/uploads/thumbnails/<?= htmlspecialchars($v['thumbnail']) ?>" alt="Thumbnail">
+                        <p><?= htmlspecialchars($v['title']) ?></p>
+                        <p><?= htmlspecialchars($v['description']) ?></p>
+                        <p>Views: <?= $v['views'] ?></p>
+                        <p id="cats">Category: <?= implode(', ', $videoCat) ?></p>
+                    </a>
+                    <?php if ($currentUsername && $videoClass->getVideoCreator($v['id']) === $currentUsername): ?>
+                        <a href="pages/deleteVideo.php?id=<?= $v['id'] ?>"><button>Delete</button></a>
+                    <?php endif; ?>
+                </div>
+            <?php endforeach; ?>
+        </div>
+
+        <p id="noResults" style="display:none;">Geen videos gevonden.</p>
+    </main>
+
+    <script src="js/script.js"></script>
+
+</body>
+</html>

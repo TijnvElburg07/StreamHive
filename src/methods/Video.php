@@ -1,6 +1,6 @@
 
 <?php
-include_once '../core/db.php';
+include_once __DIR__ .  '/../core/db.php';
 
 class Video{
 
@@ -23,8 +23,17 @@ class Video{
     }
 
     public function addView($videoId){
-        $stmt = $this->pdo->prepare("UPDATE videos SET views = views + 1 WHERE id = ?");
-        $stmt->execute([$videoId]);
+        if (!isset($_SESSION['viewed_videos'])) {
+            $_SESSION['viewed_videos'] = [];
+        }
+
+
+        if (!in_array($videoId, $_SESSION['viewed_videos'])) {
+            $stmt = $this->pdo->prepare("UPDATE videos SET views = views + 1 WHERE id = ?");
+            $stmt->execute([$videoId]);
+
+            $_SESSION['viewed_videos'][] = $videoId;
+        }
     }
 
     public function deleteVideo($videoId){
@@ -52,5 +61,14 @@ class Video{
                 unlink($thumbPath);
             }
         }
+    }
+
+    public function getVideoCategories($videoId){
+        $stmt = $this->pdo->prepare("SELECT category_id FROM video_category WHERE video_id = ?");
+        $stmt->execute([$videoId]);
+        $result = $stmt->fetchAll(PDO::FETCH_COLUMN);
+        $stmt = $this->pdo->prepare("SELECT name FROM categories WHERE id = ?");
+        $stmt->execute([$result[0]]);
+        return $stmt->fetchAll(PDO::FETCH_COLUMN);
     }
 }

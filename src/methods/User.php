@@ -27,7 +27,7 @@ class User{
 
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-        $stmt = $this->pdo->prepare("INSERT INTO users (username, email, password) VALUES (:username, :email, :password)");
+        $stmt = $this->pdo->prepare("INSERT INTO users (username, email, password, created_at, role) VALUES (:username, :email, :password, NOW(), 'user')");
         return $stmt->execute(['username' => $username, 'email' => $email, 'password' => $hashedPassword]);
     }
 
