@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // 2. Categorieën koppelen in de video_categories tabel
     if (!empty($selectedCategories) && $videoId) {
-        $catInsert = $pdo->prepare("INSERT INTO video_categories (video_id, category_id) VALUES (?, ?)");
+        $catInsert = $pdo->prepare("INSERT INTO video_category (video_id, category_id) VALUES (?, ?)");
         foreach ($selectedCategories as $catId) {
             $catInsert->execute([$videoId, $catId]);
         }

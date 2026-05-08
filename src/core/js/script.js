@@ -1,19 +1,71 @@
+function toggleFilter() {
+  const dropdown = document.getElementById("filterDropdown");
+  const btn = document.getElementById("filterToggle");
+  const isOpen = dropdown.classList.contains("open");
+
+  dropdown.classList.toggle("open", !isOpen);
+  btn.classList.toggle("active", !isOpen);
+}
+
+document.addEventListener("click", function (e) {
+  const wrapper = document.querySelector(".filter-wrapper");
+  if (wrapper && !wrapper.contains(e.target)) {
+    document.getElementById("filterDropdown").classList.remove("open");
+    document.getElementById("filterToggle").classList.remove("active");
+  }
+});
+
 function filterVideos() {
-  const query = document.getElementById("searchInput").value.toLowerCase();
+  const query = document.getElementById("searchInput").value.toLowerCase().trim();
+  const checkboxes = document.querySelectorAll(".filter-options input[type='checkbox']:checked");
+  const selectedCats = Array.from(checkboxes).map(cb => cb.value);
+
   const cards = document.querySelectorAll(".video-card");
-  const cats = document.querySelectorAll("#cats");
   let visible = 0;
 
-  for (let i = 0; i < cards.length; i++) {
-    const title = cards[i].querySelector("p").textContent.toLowerCase();
-    const description = cards[i].querySelectorAll("p")[1].textContent.toLowerCase();
-    const category = cats[i].textContent.toLowerCase();
+  cards.forEach(card => {
+    const title = card.dataset.title || "";
+    const description = card.dataset.description || "";
+    const categories = JSON.parse(card.dataset.categories || "[]");
 
-    const match = title.includes(query) || description.includes(query) || category.includes(query);
-    cards[i].style.display = match ? "" : "none";
-    if (match) visible++;
-  }
+    // Zoekterm match
+    const searchMatch =
+      query === "" ||
+      title.includes(query) ||
+      description.includes(query) ||
+      categories.some(c => c.includes(query));
+
+    const catMatch =
+      selectedCats.length === 0 ||
+      selectedCats.every(sc => categories.includes(sc));
+
+    const show = searchMatch && catMatch;
+    card.style.display = show ? "" : "none";
+    if (show) visible++;
+  });
 
   document.getElementById("noResults").style.display =
     visible === 0 ? "" : "none";
+
+  updateFilterBadge(selectedCats.length);
+}
+
+function updateFilterBadge(count) {
+  const badge = document.getElementById("filterBadge");
+  const clearBtn = document.getElementById("filterClear");
+  if (count > 0) {
+    badge.textContent = count;
+    badge.style.display = "inline-flex";
+    clearBtn.style.display = "inline-flex";
+  } else {
+    badge.style.display = "none";
+    clearBtn.style.display = "none";
+  }
+}
+
+function clearFilters() {
+  document.querySelectorAll(".filter-options input[type='checkbox']").forEach(cb => {
+    cb.checked = false;
+  });
+  filterVideos();
 }

@@ -61,6 +61,8 @@ class Video{
                 unlink($thumbPath);
             }
         }
+        header('Location: ../index.php');
+        exit();
     }
 
     public function getVideoCategories($videoId){
