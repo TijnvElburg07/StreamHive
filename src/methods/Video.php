@@ -37,13 +37,13 @@ class Video{
     }
 
     public function deleteVideo($videoId){
-        $stmt = $this->pdo->prepare("DELETE FROM videos WHERE id = ?");
-        $stmt->execute([$videoId]);
         $stmt = $this->pdo->prepare("DELETE FROM comments WHERE video_id = ?");
         $stmt->execute([$videoId]);
         $stmt = $this->pdo->prepare("DELETE FROM likes WHERE video_id = ?");
         $stmt->execute([$videoId]);
         $stmt = $this->pdo->prepare("DELETE FROM video_category WHERE video_id = ?");
+        $stmt->execute([$videoId]);
+        $stmt = $this->pdo->prepare("DELETE FROM videos WHERE id = ?");
         $stmt->execute([$videoId]);
 
         // Verwijder het videobestand en de thumbnail van de server
